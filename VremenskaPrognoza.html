@@ -17,6 +17,10 @@
                 <td>{{ prognoza.sys.country }}</td>
             </tr>
             <tr>
+                <td>Vreme</td>
+                <td>{{prognoza.dt *1000 | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+            </tr>
+            <tr>
                 <td>Izlazak sunca</td>
                 <td>{{prognoza.sys.sunrise *1000 | date:'HH:mm:ss'}}</td>
             </tr>
@@ -49,8 +53,16 @@
 
         <table>
             <tr>
-                <td>Grad: </td>
+                <td>Stanica: </td>
                 <td>{{ prognozaBG.station.name }}</td>
+            </tr>
+            <tr>
+                <td>Temperatura: </td>
+                <td>{{ prognozaBG.last.main.temp - 273.15}}&deg;C</td>
+            </tr>
+            <tr>
+                <td>Vreme: </td>
+                <td>{{ prognozaBG.last.dt*1000 | date:'dd.MM.yyyy HH:mm:ss'}}</td>
             </tr>
            
 
