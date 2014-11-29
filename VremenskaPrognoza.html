@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Vremenska prognoza</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+</head>
+<body ng-app="myApp">
+    <div ng-controller="MyController">
+
+        <table>
+                <tr>
+                    <td>Grad: </td>
+                    <td>{{ prognoza.name }}</td>
+                </tr>
+            <tr>
+                <td>Zemlja: </td>
+                <td>{{ prognoza.sys.country }}</td>
+            </tr>
+            <tr>
+                <td>Izlazak sunca</td>
+                <td>{{prognoza.sys.sunrise *1000 | date:'HH:mm:ss'}}</td>
+            </tr>
+            <tr>
+                <td>Zalazak sunca</td>
+                <td>{{prognoza.sys.sunset *1000 | date:'HH:mm:ss'}}</td>
+            </tr>
+            <tr>
+                <td>Vetar</td>
+                <td>{{prognoza.wind.speed}}</td>
+            </tr>
+            <tr>
+                <td>Pravac</td>
+                <td>{{prognoza.wind.deg}}&deg; ({{ pravacStr(prognoza.wind.deg)}})</td>
+            </tr>
+            <tr>
+                <td>Temperatura</td>
+                <td>{{prognoza.main.temp - 273.15}}&deg;C</td>
+            </tr>
+            <tr>
+                <td>Pritisak</td>
+                <td>{{prognoza.main.pressure}}</td>
+            </tr>
+            <tr>
+                <td>Vlaznost</td>
+                <td>{{prognoza.main.humidity}}</td>
+            </tr>
+
+        </table>
+
+        <table>
+            <tr>
+                <td>Grad: </td>
+                <td>{{ prognozaBG.station.name }}</td>
+            </tr>
+           
+
+        </table>
+    </div>
+
+
+    <script>      
+        (function () {
+            var myApp = angular.module("myApp", []);
+
+            var MyController = function ($scope, weatherService, stanicaLYBE) {
+                stanicaLYBE.vratiPrognozu().then(function (data) {
+                    $scope.prognozaBG = data;                   
+                }, function () { alert('error'); });
+
+                weatherService.vratiPrognozu().then(function (data) {
+                    $scope.prognoza = data;
+                    $scope.pravacStr = function (pravac) {
+                        var pravacVet = "";
+                        if (pravac > 22.5 && pravac <= 67.5)
+                            pravacVet = "Severoistočni";
+                        else if (pravac > 67.5 && pravac <= 112.5)
+                            pravacVet = "Istočni";
+                        else if (pravac > 112.5 && pravac <= 157.5)
+                            pravacVet = "Jugoistočni";
+                        else if (pravac > 157.5 && pravac <= 202.5)
+                            pravacVet = "Južni";
+                        else if (pravac > 202.5 && pravac <= 247.5)
+                            pravacVet = "Jugozapadni";
+                        else if (pravac > 247.5 && pravac <= 292.5)
+                            pravacVet = "Zapadni";
+                        else if (pravac > 292.5 && pravac <= 337.5)
+                            pravacVet = "Severozapadni";
+                        else if (pravac > 337.5)
+                            pravacVet = "Severni";
+                        else if (pravac <= 22.5)
+                            pravacVet = "Severni";
+                        else
+                            pravacVet = "";
+
+                        return pravacVet;
+
+                    }
+                }, function () { alert('error'); });
+            };
+
+            myApp.controller("MyController", MyController);
+
+            var weatherService = function ($http) {
+
+                var vratiPrognozu = function () {
+                    return $http.get('http://api.openweathermap.org/data/2.5/weather?id=788771').
+                          then(function (response) {
+                              return response.data;
+                          });
+                };
+
+                return {
+                    vratiPrognozu: vratiPrognozu
+                };
+            };
+
+            var stanicaLYBE = function ($http) {
+
+                var vratiPrognozu = function () {
+                    return $http.get('http://api.openweathermap.org/data/2.5/station?id=5969').
+                          then(function (response) {
+                              return response.data;
+                          });
+                };
+
+                return {
+                    vratiPrognozu: vratiPrognozu
+                };
+            };
+
+            myApp.factory('weatherService', weatherService);
+            myApp.factory('stanicaLYBE', stanicaLYBE);
+
+
+        })();
+
+
+    </script>
+</body>
+</html>
