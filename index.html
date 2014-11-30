@@ -10,14 +10,17 @@
         <div class="articles container">
             <div class="article" ng-repeat="stanica in stanice" ng-click="toggle = !toggle">
                 <div class="ng-class:{'current' : toggle}; item row">
-                    <div class="col-xs-3">
+                    <div class="col-xs-2">
                         <p class="source"><strong>{{ stanica.station.name }}</strong></p>
                     </div>
-                    <div class="col-xs-6">
-                        <p class="title"> Geografska dužina: {{ stanica.station.coord.lon }} &nbsp;&nbsp;&nbsp;&nbsp; Geografka širina: {{ stanica.station.coord.lat }}</p>
+                    <div class="col-xs-4">
+                        <p> Geografska dužina: {{ stanica.station.coord.lon }}</p>
                     </div>
-                    <div class="col-xs-3">
-                        <p class="pubdate">{{stanica.last.dt *1000 | date:'dd.MM.yyyy HH:mm:ss'}}</p>
+                    <div class="col-xs-4">
+                        <p> Geografka širina: {{ stanica.station.coord.lat }}</p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="pubdate">{{stanica.last.dt *1000 | date:'HH:mm'}} h</p>
                     </div>
                 </div>                
                 <div class="row" ng-show="toggle">
