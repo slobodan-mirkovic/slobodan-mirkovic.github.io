@@ -1,86 +1,72 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Vremenska prognoza</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-</head>
-<body ng-app="myApp">
-    <div ng-controller="MyController">
+﻿<!doctype html>
+<html>
+  <head>
+      <title>Automatske meteorološke stanice</title>      
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="style.css">
+  </head>
+<body ng-app="weatherApp">
+    <div ng-controller="StationController">
+        <div class="articles container">
+            <div class="article" ng-repeat="stanica in stanice" ng-click="toggle = !toggle">
+                <div class="ng-class:{'current' : toggle}; item row">
+                    <div class="col-xs-3">
+                        <p class="source"><strong>{{ stanica.station.name }}</strong></p>
+                    </div>
+                    <div class="col-xs-6">
+                        <p class="title"> Geografska dužina: {{ stanica.station.coord.lon }} &nbsp;&nbsp;&nbsp;&nbsp; Geografka širina: {{ stanica.station.coord.lat }}</p>
+                    </div>
+                    <div class="col-xs-3">
+                        <p class="pubdate">{{stanica.last.dt *1000 | date:'dd.MM.yyyy HH:mm:ss'}}</p>
+                    </div>
+                </div>                
+                <div class="row" ng-show="toggle">
+                    <div class="col-xs-3">
+                        &nbsp;
 
-        <table>
-                <tr>
-                    <td>Grad: </td>
-                    <td>{{ prognoza.name }}</td>
-                </tr>
-            <tr>
-                <td>Zemlja: </td>
-                <td>{{ prognoza.sys.country }}</td>
-            </tr>
-            <tr>
-                <td>Vreme</td>
-                <td>{{prognoza.dt *1000 | date:'dd.MM.yyyy HH:mm:ss'}}</td>
-            </tr>
-            <tr>
-                <td>Izlazak sunca</td>
-                <td>{{prognoza.sys.sunrise *1000 | date:'HH:mm:ss'}}</td>
-            </tr>
-            <tr>
-                <td>Zalazak sunca</td>
-                <td>{{prognoza.sys.sunset *1000 | date:'HH:mm:ss'}}</td>
-            </tr>
-            <tr>
-                <td>Vetar</td>
-                <td>{{prognoza.wind.speed}}</td>
-            </tr>
-            <tr>
-                <td>Pravac</td>
-                <td>{{prognoza.wind.deg}}&deg; ({{ pravacStr(prognoza.wind.deg)}})</td>
-            </tr>
-            <tr>
-                <td>Temperatura</td>
-                <td>{{prognoza.main.temp - 273.15}}&deg;C</td>
-            </tr>
-            <tr>
-                <td>Pritisak</td>
-                <td>{{prognoza.main.pressure}}</td>
-            </tr>
-            <tr>
-                <td>Vlaznost</td>
-                <td>{{prognoza.main.humidity}}</td>
-            </tr>
+                    </div>
+                    <div class="col-xs-4">
+                        <table class="table">
+                            <tr>
+                                <td>Temperatura</td>
+                                <td class="text-center">{{stanica.last.main.temp - 273.15 | number:1}} &deg;C</td>
+                            </tr>
+                            <tr>
+                                <td>Pritisak</td>
+                                <td class="text-center">{{stanica.last.main.pressure}} hpa</td>
+                            </tr>
+                            <tr>
+                                <td>Vlažnost</td>
+                                <td class="text-center">{{stanica.last.main.humidity}} %</td>
+                            </tr>
+                            <tr>
+                                <td>Brzina vetra</td>
+                                <td class="text-center">{{stanica.last.wind.speed}} m/s</td>
+                            </tr>
+                            <tr>
+                                <td>Pravac vetra</td>
+                                <td class="text-center">{{stanica.last.wind.deg}}&deg; ({{ pravacStr(stanica.last.wind.deg)}})</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-5">&nbsp;</div>
+                </div>
+            </div>
 
-        </table>
-
-        <table>
-            <tr>
-                <td>Stanica: </td>
-                <td>{{ prognozaBG.station.name }}</td>
-            </tr>
-            <tr>
-                <td>Temperatura: </td>
-                <td>{{ prognozaBG.last.main.temp - 273.15}}&deg;C</td>
-            </tr>
-            <tr>
-                <td>Vreme: </td>
-                <td>{{ prognozaBG.last.dt*1000 | date:'dd.MM.yyyy HH:mm:ss'}}</td>
-            </tr>
-           
-
-        </table>
+        </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.min.js"></script>
+        <script>
+            (function () {
 
-    <script>      
-        (function () {
-            var myApp = angular.module("myApp", []);
 
-            var MyController = function ($scope, weatherService, stanicaLYBE) {
-                stanicaLYBE.vratiPrognozu().then(function (data) {
-                    $scope.prognozaBG = data;                   
-                }, function () { alert('error'); });
+                var WeatherApp = angular.module("weatherApp", []);
 
-                weatherService.vratiPrognozu().then(function (data) {
-                    $scope.prognoza = data;
+                var StationController = function ($scope, weatherService) {
+
+                    $scope.toggle = false;
+
                     $scope.pravacStr = function (pravac) {
                         var pravacVet = "";
                         if (pravac > 22.5 && pravac <= 67.5)
@@ -107,46 +93,35 @@
                         return pravacVet;
 
                     }
-                }, function () { alert('error'); });
-            };
 
-            myApp.controller("MyController", MyController);
-
-            var weatherService = function ($http) {
-
-                var vratiPrognozu = function () {
-                    return $http.get('http://api.openweathermap.org/data/2.5/weather?id=788771').
-                          then(function (response) {
-                              return response.data;
-                          });
+                    weatherService.vratiPrognozu().then(function (data) {
+                        $scope.stanice = data;
+                      
+                    }, function () { alert('error'); });
                 };
 
-                return {
-                    vratiPrognozu: vratiPrognozu
+                WeatherApp.controller("StationController", StationController);
+
+                var weatherService = function ($http) {
+
+                    var vratiPrognozu = function () {
+                        return $http.get('http://api.openweathermap.org/data/2.5/station/find?lat=44.39&lon=20.26&cnt=6').
+                              then(function (response) {
+                                  return response.data;
+                              });
+                    };
+
+                    return {
+                        vratiPrognozu: vratiPrognozu
+                    };
                 };
-            };
-
-            var stanicaLYBE = function ($http) {
-
-                var vratiPrognozu = function () {
-                    return $http.get('http://api.openweathermap.org/data/2.5/station?id=5969').
-                          then(function (response) {
-                              return response.data;
-                          });
-                };
-
-                return {
-                    vratiPrognozu: vratiPrognozu
-                };
-            };
-
-            myApp.factory('weatherService', weatherService);
-            myApp.factory('stanicaLYBE', stanicaLYBE);
+                WeatherApp.factory('weatherService', weatherService);
 
 
-        })();
+            })();
 
 
-    </script>
+        </script>
+
 </body>
 </html>
