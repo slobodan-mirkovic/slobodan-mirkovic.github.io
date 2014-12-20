@@ -33,7 +33,7 @@ p {
 }
 
 .item {
-  cursor: pointer;
+  /*cursor: pointer;*/
   padding-top: 7px;
   padding-bottom: 7px;
   
