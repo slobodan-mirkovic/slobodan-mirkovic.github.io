@@ -12,7 +12,7 @@
         <ol>
           <li ng-repeat="stanica in ::stanice.list">{{ stanica.name}}</li>
         </ol>
-            <div class="article" ng-repeat="stanica in ::stanice.list">
+            <div class="article" ng-repeat="stanica in ::stanice">
                 <div class="ng-class:{'current' : toggle}; item row">
                     <div class="col-xs-1">
                         <span class="ng-class:{'glyphicon-chevron-down' : !toggle,'glyphicon-chevron-up' : toggle }; glyphicon" ng-click="toggle = !toggle" style="cursor: pointer;"></span>
@@ -21,13 +21,13 @@
                         <p class="source"><strong>{{ stanica.station.name }}</strong></p>
                     </div>
                     <div class="col-xs-3">
-                        <p> Geografska dužina: {{ stanica.station.coord.lon }}</p>
+                        <p> Geografska dužina: {{ stanica.coord.lon }}</p>
                     </div>
                     <div class="col-xs-3">
-                        <p> Geografka širina: {{ stanica.station.coord.lat }}</p>
+                        <p> Geografka širina: {{ stanica.coord.lat }}</p>
                     </div>
                     <div class="col-xs-2">
-                        <p class="pubdate">{{stanica.last.dt *1000 | date:'HH:mm'}} h</p>
+                        <p class="pubdate">{{stanica.dt *1000 | date:'HH:mm'}} h</p>
                     </div>
                 </div>                
                 <div class="row" ng-show="toggle">
@@ -39,23 +39,23 @@
                         <table class="table">
                             <tr>
                                 <td>Temperatura</td>
-                                <td class="text-center">{{stanica.last.main.temp - 273.15 | number:1}} &deg;C</td>
+                                <td class="text-center">{{stanica.main.temp - 273.15 | number:1}} &deg;C</td>
                             </tr>
                             <tr>
                                 <td>Pritisak</td>
-                                <td class="text-center">{{stanica.last.main.pressure}} hpa</td>
+                                <td class="text-center">{{stanica.main.pressure}} hpa</td>
                             </tr>
                             <tr>
                                 <td>Vlažnost</td>
-                                <td class="text-center">{{stanica.last.main.humidity}} %</td>
+                                <td class="text-center">{{stanica.main.humidity}} %</td>
                             </tr>
                             <tr>
                                 <td>Brzina vetra</td>
-                                <td class="text-center">{{stanica.last.wind.speed}} m/s</td>
+                                <td class="text-center">{{stanica.wind.speed}} m/s</td>
                             </tr>
                             <tr>
                                 <td>Pravac vetra</td>
-                                <td class="text-center">{{stanica.last.wind.deg}}&deg; ({{ pravacStr(stanica.last.wind.deg)}})</td>
+                                <td class="text-center">{{stanica.wind.deg}}&deg; ({{ pravacStr(stanica.wind.deg)}})</td>
                             </tr>
                         </table>
                     </div>
