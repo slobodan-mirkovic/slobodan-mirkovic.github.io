@@ -8,7 +8,7 @@
 <body ng-app="weatherApp">
     <div ng-controller="StationController">
         <div class="articles container">
-            <div class="article" ng-repeat="stanica in ::stanice">
+            <div class="article" ng-repeat="stanica in ::stanice.list">
                 <div class="ng-class:{'current' : toggle}; item row">
                     <div class="col-xs-1">
                         <span class="ng-class:{'glyphicon-chevron-down' : !toggle,'glyphicon-chevron-up' : toggle }; glyphicon" ng-click="toggle = !toggle" style="cursor: pointer;"></span>
@@ -111,7 +111,7 @@
                 var weatherService = function ($http) {
 
                     var vratiPrognozu = function () {
-                        return $http.get('http://api.openweathermap.org/data/2.5/station/find?lat=44.39&lon=20.26&cnt=6').
+                        return $http.get('http://api.openweathermap.org/data/2.5/find?lat=44.39&lon=20.26&cnt=10').
                               then(function (response) {
                                   return response.data;
                               });
