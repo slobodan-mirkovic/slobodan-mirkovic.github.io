@@ -12,7 +12,7 @@
         <ol>
           <li ng-repeat="stanica in ::stanice.list">{{ stanica.name}}</li>
         </ol>
-            <div class="article" ng-repeat="stanica in ::stanice">
+            <div class="article" ng-repeat="stanica in ::stanice.list">
                 <div class="ng-class:{'current' : toggle}; item row">
                     <div class="col-xs-1">
                         <span class="ng-class:{'glyphicon-chevron-down' : !toggle,'glyphicon-chevron-up' : toggle }; glyphicon" ng-click="toggle = !toggle" style="cursor: pointer;"></span>
