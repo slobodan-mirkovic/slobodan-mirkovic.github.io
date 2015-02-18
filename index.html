@@ -8,17 +8,13 @@
 <body ng-app="weatherApp">
     <div ng-controller="StationController">
         <div class="articles container">
-
-        <ol>
-          <li ng-repeat="stanica in ::stanice.list">{{ stanica.name}}</li>
-        </ol>
             <div class="article" ng-repeat="stanica in ::stanice.list">
                 <div class="ng-class:{'current' : toggle}; item row">
                     <div class="col-xs-1">
                         <span class="ng-class:{'glyphicon-chevron-down' : !toggle,'glyphicon-chevron-up' : toggle }; glyphicon" ng-click="toggle = !toggle" style="cursor: pointer;"></span>
                     </div>
                     <div class="col-xs-3">
-                        <p class="source"><strong>{{ stanica.station.name }}</strong></p>
+                        <p class="source"><strong>{{ stanica.name }}</strong></p>
                     </div>
                     <div class="col-xs-3">
                         <p> Geografska dužina: {{ stanica.coord.lon }}</p>
